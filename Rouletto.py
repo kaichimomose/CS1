@@ -67,13 +67,14 @@ class Roulette:
         amount = int(input("Amount: "))
         if amount < 10:
             print("Minimum bet is $10.")
-            Roulette.confirm_amount()
+            amount = Roulette.confirm_amount()
         elif amount > Roulette.bank_account:
             print("You do not have that much money.")
-            Roulette.confirm_amount()
+            amount = Roulette.confirm_amount()
         else:
+            amount = amount
             print("%s" % amount)
-            return amount
+        return amount
 
     def continue_bet():
         yes_or_no = input("Continue? Yes or No: ")
@@ -97,6 +98,7 @@ class Roulette:
         else:
             number = int(input("Number: "))
             if number in range(0, 38):
+                number = number
                 amount = Roulette.confirm_amount()
             else:
                 number = None
