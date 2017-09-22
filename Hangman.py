@@ -1,12 +1,13 @@
 import random
-random.seed(1)
+random.seed(2)
 
 
-guessed_word_list = []
+guessed_letter_list = []
 life = 6
 number_words = ""
 
 
+# pick a word up
 def loadWord():
     f = open('hangman_words.txt', 'r')
     wordsList = f.readlines()
@@ -17,6 +18,7 @@ def loadWord():
     return secretWord
 
 
+# change letters of secretWord to _
 def giveHint(secretWord):
     global number_words
     for i in range(len(secretWord)):
@@ -24,20 +26,26 @@ def giveHint(secretWord):
     return number_words
 
 
+# input a guessd letter and save it in an array
 def GuessWord():
-    global guessed_word_list
-    if guessed_word_list != []:
-        print("You have picked %s" % guessed_word_list)
+    global guessed_letter_list
+    if guessed_letter_list != []:
+        print("You have picked %s" % guessed_letter_list)
     guessed_word = input("Guess one charactor: ")
-    if guessed_word in guessed_word_list:
-        print("You have already picked %s" % guessed_word)
-        print("Choose other charactor")
+    if len(guessed_word) > 1:
+        print("Choose only one letter!")
         GuessWord()
     else:
-        guessed_word_list.append(guessed_word)
+        if guessed_word in guessed_letter_list:
+            print("You have already picked %s" % guessed_word)
+            print("Choose other charactor")
+            GuessWord()
+        else:
+            guessed_letter_list.append(guessed_word)
     return guessed_word
 
 
+# compare letters of the secretWord and a guessed word
 def CheckWord(secretWord, guessed_word):
     global number_words
     if guessed_word in secretWord:
@@ -49,12 +57,14 @@ def CheckWord(secretWord, guessed_word):
             else:
                 pass
         number_words = ''.join(split_number_words)
-        print(number_words)
+        print("Correct! " + number_words)
         return number_words
     else:
+        print("Wrong... " + number_words)
         return False
 
 
+# count the number of mistakes and check game clear or game over
 def ClearOrGameOver(check_results, secretWord):
     global life
     if check_results == secretWord:
@@ -66,12 +76,13 @@ def ClearOrGameOver(check_results, secretWord):
             print("You can make mistake %s times" % life)
             Hangman(secretWord)
         else:
-            print("Game Over")
+            print("Game Over. The SecretWord is %s" % secretWord)
             pass
     else:
         Hangman(secretWord)
 
 
+# one process of hangman
 def Hangman(secretWord):
     global number_words
     guessed_word = GuessWord()
@@ -79,7 +90,13 @@ def Hangman(secretWord):
     ClearOrGameOver(check_results, secretWord)
 
 
-secretWord = loadWord()
-print(secretWord)
-number_words = giveHint(secretWord)
-Hangman(secretWord)
+# repeat hangman
+def playGame():
+    secretWord = loadWord()
+    number_words = giveHint(secretWord)
+    print(number_words)
+    Hangman(secretWord)
+
+
+# play game
+playGame()
