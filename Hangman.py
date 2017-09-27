@@ -35,19 +35,23 @@ def GuessWord():
     if len(guessed_word) > 1:
         print("Choose only one letter!")
         GuessWord()
+    elif guessed_word.isalpha() is False:
+        print("You did not pick a letter.")
+        GuessWord()
+    elif guessed_word in guessed_letter_list:
+        print("You have already picked %s" % guessed_word)
+        print("Choose other charactor")
+        GuessWord()
     else:
-        if guessed_word in guessed_letter_list:
-            print("You have already picked %s" % guessed_word)
-            print("Choose other charactor")
-            GuessWord()
-        else:
-            guessed_letter_list.append(guessed_word)
+        guessed_letter_list.append(guessed_word)
+
     return guessed_word
 
 
 # compare letters of the secretWord and a guessed word
 def CheckWord(secretWord, guessed_word):
     global number_words
+    guessed_word = guessed_word.lower()
     if guessed_word in secretWord:
         split_secretWord = list(secretWord)
         split_number_words = list(number_words)

@@ -8,6 +8,7 @@ random.seed(2)
 
 guessed_letter_list = []
 life = 6
+count_correct = 0
 number_words = ""
 
 
@@ -18,10 +19,9 @@ def loadWord():
     soup = BeautifulSoup(page.content, "html.parser")
     text = (''.join(s.findAll(text=True))for s in soup.findAll('p'))
 
-    # c = Counter((x.rstrip(punctuation).lower() for y in text for x in y.split()))
-    # wordsList = [x for x in c if c.get(x) > 5]
+    c = Counter((x.lower() for y in text for x in y.split() if x.isalpha() is True))
+    wordsList = [x for x in c if c.get(x) > 0]
 
-    wordsList = [x.rstrip(punctuation).lower() for y in text for x in y.split()]
     secretWord = random.choice(wordsList)
     return secretWord
 
@@ -35,67 +35,88 @@ def giveHint(secretWord):
 
 
 # input a guessd letter and save it in an array
-def GuessWord():
+def guessLetter():
     global guessed_letter_list
     if guessed_letter_list != []:
         print("You have picked %s" % guessed_letter_list)
-    guessed_word = input("Guess one charactor: ")
-    if len(guessed_word) > 1:
+    guessed_letter = input("Guess one charactor: ")
+    if len(guessed_letter) > 1:
         print("Choose only one letter!")
-        GuessWord()
+        guessLetter()
+    elif guessed_letter.isalpha() is False:
+        print("You did not pick a letter.")
+        guessLetter()
+    elif guessed_letter in guessed_letter_list:
+        print("You have already picked %s" % guessed_letter)
+        print("Choose other charactor")
+        guessLetter()
     else:
-        if guessed_word in guessed_letter_list:
-            print("You have already picked %s" % guessed_word)
-            print("Choose other charactor")
-            GuessWord()
-        else:
-            guessed_letter_list.append(guessed_word)
-    return guessed_word
+        guessed_letter_list.append(guessed_letter)
+    return guessed_letter
 
 
 # compare letters of the secretWord and a guessed word
-def CheckWord(secretWord, guessed_word):
+def checkWord(secretWord, guessed_letter):
     global number_words
-    if guessed_word in secretWord:
+    global count_correct
+    guessed_letter = guessed_letter.lower()
+    if guessed_letter in secretWord:
         split_secretWord = list(secretWord)
         split_number_words = list(number_words)
         for i in range(len(split_secretWord)):
-            if split_secretWord[i] == guessed_word:
+            if split_secretWord[i] == guessed_letter:
                 split_number_words[i] = split_secretWord[i]
+                count_correct += 1
             else:
                 pass
         number_words = ''.join(split_number_words)
         print("Correct! " + number_words)
-        return number_words
+        return True
     else:
         print("Wrong... " + number_words)
         return False
 
 
 # count the number of mistakes and check game clear or game over
-def ClearOrGameOver(check_results, secretWord):
+def clearOrGameOver(check_results, secretWord):
     global life
-    if check_results == secretWord:
-        print("Congratulation!!")
-        pass
-    elif check_results is False:
+    global number_words
+    if check_results is False:
         life -= 1
         if life > 0:
-            print("You can make mistake %s times" % life)
-            Hangman(secretWord)
+            print("You can make mistake %s times." % life)
+            hangman(secretWord)
         else:
-            print("Game Over. The SecretWord is %s" % secretWord)
+            print("Game Over. The SecretWord is %s." % secretWord)
             pass
     else:
-        Hangman(secretWord)
+        if number_words == secretWord:
+            print("Congratulation!! The SecretWord is %s!" % secretWord)
+            pass
+        else:
+            guessWord(secretWord)
+
+
+def guessWord(secretWord):
+    global count_correct
+    if count_correct >= len(secretWord)/2:
+        guess_word = input("What is the secret word: ")
+        if guess_word == secretWord:
+            print("Congratulation!! The SecretWord is %s!" % secretWord)
+            pass
+        else:
+            print("Wrong...")
+            hangman(secretWord)
+    else:
+        hangman(secretWord)
 
 
 # one process of hangman
-def Hangman(secretWord):
+def hangman(secretWord):
     global number_words
-    guessed_word = GuessWord()
-    check_results = CheckWord(secretWord, guessed_word)
-    ClearOrGameOver(check_results, secretWord)
+    guessed_letter = guessLetter()
+    check_results = checkWord(secretWord, guessed_letter)
+    clearOrGameOver(check_results, secretWord)
 
 
 # repeat hangman
@@ -103,7 +124,7 @@ def playGame():
     secretWord = loadWord()
     number_words = giveHint(secretWord)
     print(number_words)
-    Hangman(secretWord)
+    hangman(secretWord)
 
 
 # play game
