@@ -1,7 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 from collections import Counter
-from string import punctuation
+# from string import punctuation
 import random
 random.seed(2)
 
@@ -22,14 +22,14 @@ def loadWord():
     c = Counter((x.lower() for y in text for x in y.split() if x.isalpha() is True))
     wordsList = [x for x in c if c.get(x) > 0]
 
-    secretWord = random.choice(wordsList)
-    return secretWord
+    secret_word = random.choice(wordsList)
+    return secret_word
 
 
 # change letters of secretWord to _
-def giveHint(secretWord):
+def giveHint(secret_word):
     global number_words
-    for i in range(len(secretWord)):
+    for i in range(len(secret_word)):
         number_words += "_"
     return number_words
 
@@ -56,16 +56,16 @@ def guessLetter():
 
 
 # compare letters of the secretWord and a guessed word
-def checkWord(secretWord, guessed_letter):
+def checkWord(secret_word, guessed_letter):
     global number_words
     global count_correct
     guessed_letter = guessed_letter.lower()
-    if guessed_letter in secretWord:
-        split_secretWord = list(secretWord)
+    if guessed_letter in secret_word:
+        split_secret_word = list(secret_word)
         split_number_words = list(number_words)
-        for i in range(len(split_secretWord)):
-            if split_secretWord[i] == guessed_letter:
-                split_number_words[i] = split_secretWord[i]
+        for i in range(len(split_secret_word)):
+            if split_secret_word[i] == guessed_letter:
+                split_number_words[i] = split_secret_word[i]
                 count_correct += 1
             else:
                 pass
@@ -78,53 +78,54 @@ def checkWord(secretWord, guessed_letter):
 
 
 # count the number of mistakes and check game clear or game over
-def clearOrGameOver(check_results, secretWord):
+def clearOrGameOver(check_results, secret_word):
     global life
     global number_words
     if check_results is False:
         life -= 1
         if life > 0:
             print("You can make mistake %s times." % life)
-            hangman(secretWord)
+            hangman(secret_word)
         else:
-            print("Game Over. The SecretWord is %s." % secretWord)
+            print("Game Over. The SecretWord is %s." % secret_word)
             pass
     else:
-        if number_words == secretWord:
-            print("Congratulation!! The SecretWord is %s!" % secretWord)
+        if number_words == secret_word:
+            print("Congratulation!! The SecretWord is %s!" % secret_word)
             pass
         else:
-            guessWord(secretWord)
+            guessWord(secret_word)
 
 
-def guessWord(secretWord):
+# be able to guess full secretWord if user corrects more than half of letters of secretWord
+def guessWord(secret_word):
     global count_correct
-    if count_correct >= len(secretWord)/2:
+    if count_correct >= len(secret_word)/2:
         guess_word = input("What is the secret word: ")
-        if guess_word == secretWord:
-            print("Congratulation!! The SecretWord is %s!" % secretWord)
+        if guess_word == secret_word:
+            print("Congratulation!! The SecretWord is %s!" % secret_word)
             pass
         else:
             print("Wrong...")
-            hangman(secretWord)
+            hangman(secret_word)
     else:
-        hangman(secretWord)
+        hangman(secret_word)
 
 
 # one process of hangman
-def hangman(secretWord):
+def hangman(secret_word):
     global number_words
     guessed_letter = guessLetter()
-    check_results = checkWord(secretWord, guessed_letter)
-    clearOrGameOver(check_results, secretWord)
+    check_results = checkWord(secret_word, guessed_letter)
+    clearOrGameOver(check_results, secret_word)
 
 
 # repeat hangman
 def playGame():
-    secretWord = loadWord()
-    number_words = giveHint(secretWord)
+    secret_word = loadWord()
+    number_words = giveHint(secret_word)
     print(number_words)
-    hangman(secretWord)
+    hangman(secret_word)
 
 
 # play game
