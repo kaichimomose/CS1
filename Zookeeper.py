@@ -22,10 +22,10 @@ class Animal(object):
         print("%s sleeps for 8 hours" % self.name)
 
     def eat(self, food):
-        print("%s eats %s" %(self.name, food))
+        print("%s eats %s" % (self.name, food))
         if food == self.favoriteFood:
-            print("YUM! %s wants more %s" %(self.name, food))
-            
+            print("YUM! %s wants more %s" % (self.name, food))
+
 
 # Copy your Tiger class here
 class Tiger(Animal):
@@ -61,7 +61,7 @@ class Giraffe(Animal):
     def eat(self, food):
         Animal.eat(self, food)
         if food != self.favoriteFood:
-            print("YUCK! %s spits out %s" %(self.name, food))
+            print("YUCK! %s spits out %s" % (self.name, food))
 
 
 # Implement the Bee class here as a subclass of Animal
@@ -73,7 +73,7 @@ class Bee(Animal):
     def eat(self, food):
         Animal.eat(self, food)
         if food != self.favoriteFood:
-            print("YUCK! %s spits out %s" %(self.name, food))
+            print("YUCK! %s spits out %s" % (self.name, food))
 
     def sleep(self):
         print("%s never sleeps" % self.name)
@@ -86,7 +86,7 @@ class Zookeeper(object):
 
     # Implement the feedAnimals method here
     def feedAnimals(self, animalsToFeed, food):
-        print("%s is feeding %s to %s of %s total animals" %(self.name, food, len(animalsToFeed), Animal.population))
+        print("%s is feeding %s to %s of %s total animals" % (self.name, food, len(animalsToFeed), Animal.population))
         for animal in animalsToFeed:
             animal.eat(food)
             animal.sleep()
