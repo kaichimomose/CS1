@@ -37,31 +37,31 @@ class Classroom(object):
         elif command == "s":
             self.see_class_detail()
         elif command == "e":
-            return
+            return 0
         else:
             pass
         self.command()
 
-    def add_class_schedule(self):
-        day = input("When is the %s class: " % self.class_name)
-        self.day_time[day] = input("What time does it start on %s: " % day)
-        more_day = input("Do you add other days? (yes or no): ")
+    def add_class_schedule(self, day, time, more_day):
+        day = day
+        self.day_time[day] = time
+        more_day = more_day
         print(self.day_time)
         if more_day == "yes":
-            self.add_class_schedule()
+            print("yes")
         else:
-            return
+            return 0
 
-    def remove_class_schedule(self):
-        day = input("What date do you want to remove? The class schedule is now %s: " % self.day_time)
+    def remove_class_schedule(self, day):
+        day = day
         for a_day_time in self.day_time:
             if day == a_day_time:
                 self.day_time.pop(day)
                 print("%s has been removed from the %s class" % (day, self.class_name))
                 print("Now the schedule of the %s class is %s" % (self.class_name, self.day_time))
-                return
+                return 1
             else:
-                return
+                return 0
 
     def calculate_average_grade(self):
         for student in self.students:
@@ -75,9 +75,9 @@ class Classroom(object):
                 self.students_grades[student] = round(average, 2)
         print(self.students_grades)
 
-    def add_student(self):
-        name = input("Who will you add to the %s class: " % self.class_name)
-        on_time = input("He/She join in the %s class on time or late?: " % self.class_name)
+    def add_student(self, name, on_time):
+        name = name
+        on_time = on_time
         self.students[name] = Student(name, on_time)
         print("%s has been added to the %s class" % (name, self.class_name))
         if on_time == "late":
@@ -85,8 +85,8 @@ class Classroom(object):
         self.students_name.append(name)
         print("%s has %s" % (self.class_name, self.students_name))
 
-    def remove_student(self):
-        name = input("Who will you remove from the %s class: " % self.class_name)
+    def remove_student(self, name):
+        name = name
         for student_name in self.students_name:
             if name == student_name:
                 self.students.pop(name)
@@ -94,48 +94,48 @@ class Classroom(object):
                 print("%s has been removed from the %s class" % (name, self.class_name))
                 print("Now %s has %s" % (self.class_name, self.students_name))
             else:
-                pass
+                return 0
 
-    def add_assignment(self):
-        assignment = input("What is the assignment name: ")
+    def add_assignment(self, assignment, grade):
+        assignment = assignment
         print("you give students %s for assignment" % assignment)
         for student in self.students:
-            grade = input("%s's %s grade: " % (student, assignment))
+            grade = grade
             if grade.isdigit() is True:
                 self.students[student].assignment_grade[assignment] = int(grade)
             else:
                 print("Type digit! Try again.")
-                return
+                return 0
         if assignment not in self.assignments:
             self.assignments.append(assignment)
 
-    def remove_assignment(self):
-        all_or_one = input("Do you want to remove an assignment from all students' lists or just one student's list? (type all or one): ")
+    def remove_assignment(self, all_or_one, assignment, name=""):
+        all_or_one = all_or_one
         if all_or_one == "all":
-            assignment = input("Which assignment do you remove? %s: " % (self.assignments))
+            assignment = assignment
             self.assignments.remove(assignment)
             for student_name in self.students_name:
                 for assignment_name in self.students[student_name].assignment_grade:
                     if assignment == assignment_name:
                         self.students[student_name].assignment_grade.pop(assignment)
                         print("%s has been removed from %s's assignment lists" % (assignment, student_name))
-                        return
+                        return 1
                     else:
-                        pass
+                        return 0
         elif all_or_one == "one":
-            name = input("Whose assignment do you remove: ")
+            name = name
             for student_name in self.students_name:
                 if name == student_name:
-                    assignment = input("Which assignment do you remove? %s has %s: " % (name, self.students[name].assignment_grade))
+                    assignment = assignment
                     for assignment_name in self.students[name].assignment_grade:
                         if assignment == assignment_name:
                             self.students[name].assignment_grade.pop(assignment)
                             print("%s has been removed from %s's assignment lists" % (assignment, name))
-                            return
+                            return 1
                         else:
-                            pass
+                            return 0
         else:
-            pass
+            return 0
 
     def see_class_detail(self):
         print("This class is " + self.class_name)
