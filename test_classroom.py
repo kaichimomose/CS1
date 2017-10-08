@@ -47,10 +47,14 @@ def test_add_assignment():
 def test_remove_assingment():
     classroom = setup_test()
     classroom.add_student("Kaichi", "late")
+    assert classroom.students_name == ["Hadou", "Kaichi"]
     classroom.add_assignment("Zookeeper", "20")
     assert classroom.students["Kaichi"].assignment_grade == {"Zookeeper": 20}
     assert classroom.students["Hadou"].assignment_grade == {"Hangman": 100, "Zookeeper": 20}
     assert classroom.assignments == ["Hangman", "Zookeeper"]
-    error = classroom.remove_assignment("one", "Zookeeper", "Hadou")
-    assert classroom.assignments == ["Hangman", "Zookeeper"]
-    assert error == 0
+    classroom.remove_assignment("all", "Zookeeper")
+    assert classroom.assignments == ["Hangman"]
+    assert classroom.students["Hadou"].assignment_grade == {"Hangman": 100}
+    assert classroom.students["Kaichi"].assignment_grade == {}
+    classroom.remove_assignment("all", "Hangman", "Hadou")
+    assert classroom.students["Hadou"].assignment_grade == {}

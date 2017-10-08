@@ -115,25 +115,19 @@ class Classroom(object):
             assignment = assignment
             self.assignments.remove(assignment)
             for student_name in self.students_name:
-                for assignment_name in self.students[student_name].assignment_grade:
-                    if assignment == assignment_name:
-                        self.students[student_name].assignment_grade.pop(assignment)
-                        print("%s has been removed from %s's assignment lists" % (assignment, student_name))
-                        return 1
-                    else:
-                        return 0
+                if assignment in self.students[student_name].assignment_grade:
+                    self.students[student_name].assignment_grade.pop(assignment)
+                    print("%s has been removed from %s's assignment lists" % (assignment, student_name))
+                else:
+                    pass
         elif all_or_one == "one":
             name = name
-            for student_name in self.students_name:
-                if name == student_name:
-                    assignment = assignment
-                    for assignment_name in self.students[name].assignment_grade:
-                        if assignment == assignment_name:
-                            self.students[name].assignment_grade.pop(assignment)
-                            print("%s has been removed from %s's assignment lists" % (assignment, name))
-                            return 1
-                        else:
-                            return 0
+            if name in self.students_name:
+                if assignment in self.students[name].assignment_grade:
+                    self.students[name].assignment_grade.pop(assignment)
+                    print("%s has been removed from %s's assignment lists" % (assignment, name))
+                else:
+                    pass
         else:
             return 0
 
