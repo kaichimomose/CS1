@@ -56,5 +56,34 @@ def test_remove_assingment():
     assert classroom.assignments == ["Hangman"]
     assert classroom.students["Hadou"].assignment_grade == {"Hangman": 100}
     assert classroom.students["Kaichi"].assignment_grade == {}
-    classroom.remove_assignment("all", "Hangman", "Hadou")
+    classroom.remove_assignment("one", "Hangman", "Hadou")
     assert classroom.students["Hadou"].assignment_grade == {}
+    error = classroom.remove_assignment("al", "Zookeeper")
+    assert error == 0
+
+
+def test_calculate_average_grade():
+    classroom = setup_test()
+    classroom.add_assignment("Zookeeper", "20")
+    classroom.calculate_average_grade()
+    assert classroom.students_grades == {"Hadou": 60.0}
+
+
+def test_command():
+    classroom = setup_test()
+    classroom.command("as")
+    assert classroom.students_name == ["Hadou", "Chris"]
+    classroom.command("rs")
+    assert classroom.students_name == ["Chris"]
+    classroom.command("aa")
+    assert classroom.students["Chris"].assignment_grade == {"Fizzbuzz": 50}
+    classroom.command("ra")
+    assert classroom.students["Chris"].assignment_grade == {}
+    classroom.command("ac")
+    assert classroom.day_time == {"Monday": "10:00", "Tuesday": "14:00", "Thursday": "16:00"}
+    classroom.command("rc")
+    assert classroom.day_time == {"Tuesday": "14:00", "Thursday": "16:00"}
+    classroom.command("c")
+    assert classroom.students_grades == {"Chris": 0.0}
+    exit = classroom.command("e")
+    assert exit == 0

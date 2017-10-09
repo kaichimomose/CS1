@@ -12,26 +12,26 @@ class Classroom(object):
         self.students_grades = {}
         print("you create the %s class" % self.class_name)
 
-    def command(self):
+    def command(self, command):
         print("The command list")
         print("as: add a student, rs: remove a student,")
         print("aa: add an assignment, ra: remove an assignment,")
         print("ac: add a day to the class schedule, rc: remove a day from the class schedule,")
         print("c: calculate average of each student's grades,")
         print("s: see class detail, e: exit the %s class: " % self.class_name)
-        command = input("Type a command: ")
+        command = command
         if command == "as":
-            self.add_student()
+            self.add_student("Chris", "late")
         elif command == "rs":
-            self.remove_student()
+            self.remove_student("Hadou")
         elif command == "aa":
-            self.add_assignment()
+            self.add_assignment("Fizzbuzz", "50")
         elif command == "ra":
-            self.remove_assignment()
+            self.remove_assignment("one", "Fizzbuzz", "Chris")
         elif command == "ac":
-            self.add_class_schedule()
+            self.add_class_schedule("Thursday", "16:00", "no")
         elif command == "rc":
-            self.remove_class_schedule()
+            self.remove_class_schedule("Monday")
         elif command == "c":
             self.calculate_average_grade()
         elif command == "s":
@@ -40,7 +40,7 @@ class Classroom(object):
             return 0
         else:
             pass
-        self.command()
+
 
     def add_class_schedule(self, day, time, more_day):
         day = day
@@ -54,14 +54,13 @@ class Classroom(object):
 
     def remove_class_schedule(self, day):
         day = day
-        for a_day_time in self.day_time:
-            if day == a_day_time:
-                self.day_time.pop(day)
-                print("%s has been removed from the %s class" % (day, self.class_name))
-                print("Now the schedule of the %s class is %s" % (self.class_name, self.day_time))
-                return 1
-            else:
-                return 0
+        if day in self.day_time:
+            self.day_time.pop(day)
+            print("%s has been removed from the %s class" % (day, self.class_name))
+            print("Now the schedule of the %s class is %s" % (self.class_name, self.day_time))
+            return 1
+        else:
+            return 0
 
     def calculate_average_grade(self):
         for student in self.students:
@@ -87,14 +86,13 @@ class Classroom(object):
 
     def remove_student(self, name):
         name = name
-        for student_name in self.students_name:
-            if name == student_name:
-                self.students.pop(name)
-                self.students_name.remove(name)
-                print("%s has been removed from the %s class" % (name, self.class_name))
-                print("Now %s has %s" % (self.class_name, self.students_name))
-            else:
-                return 0
+        if name in self.students_name:
+            self.students.pop(name)
+            self.students_name.remove(name)
+            print("%s has been removed from the %s class" % (name, self.class_name))
+            print("Now %s has %s" % (self.class_name, self.students_name))
+        else:
+            return 0
 
     def add_assignment(self, assignment, grade):
         assignment = assignment
@@ -137,4 +135,4 @@ class Classroom(object):
         print(self.assignments)
         print(self.students_grades)
         for name in self.students_name:
-            print("%s %s" % (name, self.students[name].assignment_grade))
+            print("%s: %s" % (name, self.students[name].assignment_grade))
