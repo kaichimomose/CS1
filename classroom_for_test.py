@@ -58,7 +58,6 @@ class Classroom(object):
             self.day_time.pop(day)
             print("%s has been removed from the %s class" % (day, self.class_name))
             print("Now the schedule of the %s class is %s" % (self.class_name, self.day_time))
-            return 1
         else:
             return 0
 

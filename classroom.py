@@ -54,14 +54,12 @@ class Classroom(object):
 
     def remove_class_schedule(self):
         day = input("What date do you want to remove? The class schedule is now %s: " % self.day_time)
-        for a_day_time in self.day_time:
-            if day == a_day_time:
-                self.day_time.pop(day)
-                print("%s has been removed from the %s class" % (day, self.class_name))
-                print("Now the schedule of the %s class is %s" % (self.class_name, self.day_time))
-                return
-            else:
-                return
+        if day in self.day_time:
+            self.day_time.pop(day)
+            print("%s has been removed from the %s class" % (day, self.class_name))
+            print("Now the schedule of the %s class is %s" % (self.class_name, self.day_time))
+        else:
+            return
 
     def calculate_average_grade(self):
         for student in self.students:
@@ -87,14 +85,13 @@ class Classroom(object):
 
     def remove_student(self):
         name = input("Who will you remove from the %s class: " % self.class_name)
-        for student_name in self.students_name:
-            if name == student_name:
-                self.students.pop(name)
-                self.students_name.remove(name)
-                print("%s has been removed from the %s class" % (name, self.class_name))
-                print("Now %s has %s" % (self.class_name, self.students_name))
-            else:
-                pass
+        if name in self.students_name:
+            self.students.pop(name)
+            self.students_name.remove(name)
+            print("%s has been removed from the %s class" % (name, self.class_name))
+            print("Now %s has %s" % (self.class_name, self.students_name))
+        else:
+            return
 
     def add_assignment(self):
         assignment = input("What is the assignment name: ")
@@ -115,27 +112,22 @@ class Classroom(object):
             assignment = input("Which assignment do you remove? %s: " % (self.assignments))
             self.assignments.remove(assignment)
             for student_name in self.students_name:
-                for assignment_name in self.students[student_name].assignment_grade:
-                    if assignment == assignment_name:
-                        self.students[student_name].assignment_grade.pop(assignment)
-                        print("%s has been removed from %s's assignment lists" % (assignment, student_name))
-                        return
-                    else:
-                        pass
+                if assignment in self.students[student_name].assignment_grade:
+                    self.students[student_name].assignment_grade.pop(assignment)
+                    print("%s has been removed from %s's assignment lists" % (assignment, student_name))
+                else:
+                    pass
         elif all_or_one == "one":
             name = input("Whose assignment do you remove: ")
-            for student_name in self.students_name:
-                if name == student_name:
-                    assignment = input("Which assignment do you remove? %s has %s: " % (name, self.students[name].assignment_grade))
-                    for assignment_name in self.students[name].assignment_grade:
-                        if assignment == assignment_name:
-                            self.students[name].assignment_grade.pop(assignment)
-                            print("%s has been removed from %s's assignment lists" % (assignment, name))
-                            return
-                        else:
-                            pass
+            if name in self.students_name:
+                assignment = input("Which assignment do you remove? %s has %s: " % (name, self.students[name].assignment_grade))
+                if assignment in self.students[name].assignment_grade:
+                    self.students[name].assignment_grade.pop(assignment)
+                    print("%s has been removed from %s's assignment lists" % (assignment, name))
+                else:
+                    pass
         else:
-            pass
+            return
 
     def see_class_detail(self):
         print("This class is " + self.class_name)

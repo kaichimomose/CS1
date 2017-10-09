@@ -1,6 +1,5 @@
 import pytest
 from classroom_for_test import Classroom
-from student import Student
 
 
 def setup_test():
