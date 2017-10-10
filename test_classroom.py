@@ -33,6 +33,8 @@ def test_add_remove_student():
     assert error == 0
     classroom.remove_student("Hadou")
     assert classroom.students == {}
+    classroom.add_student("Kaichi", "abc")
+    assert error == 0
 
 
 def test_add_assignment():
@@ -41,10 +43,19 @@ def test_add_assignment():
     assert classroom.assignments == ["Hangman"]
     error = classroom.add_assignment("Hangman", "A")
     assert error == 0
+    classroom.add_assignment("Zookeeper", "absent")
+    assert classroom.students["Hadou"].assignment_grade["Zookeeper"] == "absent"
+    assert classroom.students["Hadou"].excused_absent == 1
 
 
 def test_remove_assingment():
     classroom = setup_test()
+    classroom.add_assignment("Fizzbuzz", "absent")
+    assert classroom.students["Hadou"].excused_absent == 1
+    classroom.remove_assignment("one", "Fizzbuzz", "Hadou")
+    assert classroom.students["Hadou"].excused_absent == 0
+    classroom.remove_assignment("all", "Fizzbuzz")
+    assert classroom.students["Hadou"].excused_absent == 0
     classroom.add_student("Kaichi", "late")
     assert classroom.students_name == ["Hadou", "Kaichi"]
     classroom.add_assignment("Zookeeper", "20")
@@ -64,7 +75,10 @@ def test_remove_assingment():
 def test_calculate_average_grade():
     classroom = setup_test()
     classroom.add_assignment("Zookeeper", "20")
+    classroom.add_assignment("Fizzbuzz", "absent")
+    assert classroom.students["Hadou"].assignment_grade == {"Hangman": 100, "Zookeeper": 20, "Fizzbuzz": "absent"}
     classroom.calculate_average_grade()
+    assert classroom.students["Hadou"].excused_absent == 1
     assert classroom.students_grades == {"Hadou": 60.0}
 
 

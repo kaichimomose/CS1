@@ -68,8 +68,11 @@ class Classroom(object):
             else:
                 total_grade = self.students[student].total_grade
                 for item in self.students[student].assignment_grade:
-                    total_grade += self.students[student].assignment_grade[item]
-                average = total_grade/len(self.students[student].assignment_grade)
+                    if self.students[student].assignment_grade[item] == "absent":
+                        total_grade += 0
+                    else:
+                        total_grade += self.students[student].assignment_grade[item]
+                average = total_grade/(len(self.students[student].assignment_grade) - self.students[student].excused_absent)
                 self.students_grades[student] = round(average, 2)
         print(self.students_grades)
 
@@ -80,6 +83,8 @@ class Classroom(object):
         print("%s has been added to the %s class" % (name, self.class_name))
         if on_time == "late":
             print("%s joined in the %s class late" % (name, self.class_name))
+        elif on_time != "on time":
+            return 0
         self.students_name.append(name)
         print("%s has %s" % (self.class_name, self.students_name))
 
@@ -98,10 +103,13 @@ class Classroom(object):
         print("you give students %s for assignment" % assignment)
         for student in self.students:
             grade = grade
-            if grade.isdigit() is True:
+            if grade == 'absent':
+                self.students[student].assignment_grade[assignment] = grade
+                self.students[student].excused_absent += 1
+            elif grade.isdigit() is True:
                 self.students[student].assignment_grade[assignment] = int(grade)
             else:
-                print("Type digit! Try again.")
+                print("Type digit or 'absent'! Try again.")
                 return 0
         if assignment not in self.assignments:
             self.assignments.append(assignment)
@@ -113,6 +121,10 @@ class Classroom(object):
             self.assignments.remove(assignment)
             for student_name in self.students_name:
                 if assignment in self.students[student_name].assignment_grade:
+                    if self.students[student_name].assignment_grade[assignment] == "absent":
+                        self.students[student_name].excused_absent -= 1
+                    else:
+                        pass
                     self.students[student_name].assignment_grade.pop(assignment)
                     print("%s has been removed from %s's assignment lists" % (assignment, student_name))
                 else:
@@ -121,6 +133,10 @@ class Classroom(object):
             name = name
             if name in self.students_name:
                 if assignment in self.students[name].assignment_grade:
+                    if self.students[name].assignment_grade[assignment] == "absent":
+                        self.students[name].excused_absent -= 1
+                    else:
+                        pass
                     self.students[name].assignment_grade.pop(assignment)
                     print("%s has been removed from %s's assignment lists" % (assignment, name))
                 else:
