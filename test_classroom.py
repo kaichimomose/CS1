@@ -100,3 +100,60 @@ def test_command():
     assert classroom.students_grades == {"Chris": 0.0}
     exit = classroom.command("e")
     assert exit == 0
+
+
+def test_assignment_average_median_mode():
+    classroom = setup_test()
+    classroom.add_student("Kaichi0", "late")
+    classroom.add_student("Kaichi1", "late")
+    classroom.add_student("Kaichi2", "late")
+    classroom.add_student("Kaichi3", "late")
+    classroom.add_student("Kaichi4", "late")
+    classroom.add_assignment_each("Kaichi0", "Hangman", "30")
+    assert classroom.students["Kaichi0"].assignment_grade == {"Hangman": 30}
+    classroom.add_assignment_each("Kaichi1", "Hangman", "50")
+    classroom.add_assignment_each("Kaichi2", "Hangman", "30")
+    classroom.add_assignment_each("Kaichi3", "Hangman", "20")
+    classroom.add_assignment_each("Kaichi4", "Hangman", "30")
+    classroom.each_assignment_average("Hangman")
+    assert classroom.assignment_average == {"Hangman": 43.33}
+    classroom.each_assignment_median("Hangman")
+    assert classroom.assignment_median == {"Hangman": 30.00}
+    classroom.add_assignment_each("Hadou", "Zookeeper", "24")
+    classroom.add_assignment_each("Kaichi0", "Zookeeper", "39")
+    classroom.add_assignment_each("Kaichi1", "Zookeeper", "60")
+    classroom.add_assignment_each("Kaichi2", "Zookeeper", "40")
+    classroom.add_assignment_each("Kaichi3", "Zookeeper", "20")
+    classroom.add_assignment_each("Kaichi4", "Zookeeper", "30")
+    classroom.each_assignment_average("Zookeeper")
+    assert classroom.assignment_average == {"Hangman": 43.33, "Zookeeper": 35.50}
+    classroom.add_student("Kaichi5", "late")
+    classroom.add_assignment_each("Kaichi5", "Zookeeper", "55")
+    classroom.each_assignment_median("Zookeeper")
+    assert classroom.assignment_median == {"Hangman": 30.00, "Zookeeper": 39.00}
+    classroom.each_assignment_mode("Hangman")
+    assert classroom.assignment_mode == {"Hangman": [30]}
+    classroom.each_assignment_mode("Zookeeper")
+    assert classroom.assignment_mode == {"Hangman": [30], "Zookeeper": "none"}
+    classroom.add_assignment_each("Hadou", "Fizzbuzz", "20")
+    classroom.add_assignment_each("Kaichi0", "Fizzbuzz", "20")
+    classroom.add_assignment_each("Kaichi1", "Fizzbuzz", "20")
+    classroom.add_assignment_each("Kaichi2", "Fizzbuzz", "30")
+    classroom.add_assignment_each("Kaichi3", "Fizzbuzz", "30")
+    classroom.add_assignment_each("Kaichi4", "Fizzbuzz", "30")
+    classroom.add_assignment_each("Kaichi5", "Fizzbuzz", "55")
+    classroom.each_assignment_mode("Fizzbuzz")
+    assert classroom.assignment_mode == {"Hangman": [30], "Zookeeper": "none", "Fizzbuzz": [20, 30]}
+    classroom.add_assignment_each("Hadou", "Gradebook", "20")
+    classroom.add_assignment_each("Kaichi0", "Gradebook", "20")
+    classroom.add_assignment_each("Kaichi1", "Gradebook", "20")
+    classroom.add_assignment_each("Kaichi2", "Gradebook", "30")
+    classroom.add_assignment_each("Kaichi3", "Gradebook", "absent")
+    classroom.add_assignment_each("Kaichi4", "Gradebook", "absent")
+    classroom.add_assignment_each("Kaichi5", "Gradebook", "55")
+    classroom.each_assignment_mode("Gradebook")
+    assert classroom.assignment_mode == {"Hangman": [30], "Zookeeper": "none", "Fizzbuzz": [20, 30], "Gradebook": [20]}
+    classroom.each_assignment_average("Gradebook")
+    assert classroom.assignment_average["Gradebook"] == 29.00
+    classroom.each_assignment_median("Gradebook")
+    assert classroom.assignment_median["Gradebook"] == 20.00

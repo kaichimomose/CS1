@@ -1,4 +1,5 @@
 from student import Student
+from collections import Counter
 
 
 class Classroom(object):
@@ -10,6 +11,9 @@ class Classroom(object):
         self.students_name = []
         self.assignments = []
         self.students_grades = {}
+        self.assignment_average = {}
+        self.assignment_median = {}
+        self.assignment_mode = {}
         print("you create the %s class" % self.class_name)
 
     def command(self, command):
@@ -68,9 +72,7 @@ class Classroom(object):
             else:
                 total_grade = self.students[student].total_grade
                 for item in self.students[student].assignment_grade:
-                    if self.students[student].assignment_grade[item] == "absent":
-                        total_grade += 0
-                    else:
+                    if self.students[student].assignment_grade[item] != "absent":
                         total_grade += self.students[student].assignment_grade[item]
                 average = total_grade/(len(self.students[student].assignment_grade) - self.students[student].excused_absent)
                 self.students_grades[student] = round(average, 2)
@@ -114,6 +116,21 @@ class Classroom(object):
         if assignment not in self.assignments:
             self.assignments.append(assignment)
 
+    def add_assignment_each(self, student, assignment, grade):
+        assignment = assignment
+        grade = grade
+        if grade == 'absent':
+            self.students[student].assignment_grade[assignment] = grade
+            self.students[student].excused_absent += 1
+        elif grade.isdigit() is True:
+            self.students[student].assignment_grade[assignment] = int(grade)
+        else:
+            print("Type digit or 'absent'! Try again.")
+            return 0
+        if assignment not in self.assignments:
+            self.assignments.append(assignment)
+            print("you give students %s for assignment" % assignment)
+
     def remove_assignment(self, all_or_one, assignment, name=""):
         all_or_one = all_or_one
         if all_or_one == "all":
@@ -143,6 +160,54 @@ class Classroom(object):
                     pass
         else:
             return 0
+
+    def each_assignment_average(self, assignment):
+        total = 0
+        number_of_students = 0
+        for student in self.students:
+            if assignment in self.students[student].assignment_grade:
+                if self.students[student].assignment_grade[assignment] != "absent":
+                    total += self.students[student].assignment_grade[assignment]
+                    number_of_students += 1
+        average = total/number_of_students
+        self.assignment_average[assignment] = round(average, 2)
+
+    def each_assignment_median(self, assignment):
+        assignment_grade_roster = []
+        number_of_students = 0
+        for student in self.students:
+            if assignment in self.students[student].assignment_grade:
+                if self.students[student].assignment_grade[assignment] != "absent":
+                    assignment_grade_roster.append(self.students[student].assignment_grade[assignment])
+                    number_of_students += 1
+        assignment_grade_roster.sort()
+        middle = number_of_students / 2
+        if number_of_students % 2 != 0:
+            self.assignment_median[assignment] = assignment_grade_roster[int(middle - .5)]
+        else:
+            middle_number = (assignment_grade_roster[int(middle - 1)] + assignment_grade_roster[int(middle)])/2
+            self.assignment_median[assignment] = round(middle_number, 2)
+
+    def each_assignment_mode(self, assignment):
+        assignment_grade_roster = []
+        for student in self.students:
+            if assignment in self.students[student].assignment_grade:
+                if self.students[student].assignment_grade[assignment] != "absent":
+                    assignment_grade_roster.append(self.students[student].assignment_grade[assignment])
+        c = Counter((assignment_grade_roster))
+        numberList = [x for x in c if c.get(x) > 1]
+        if numberList == []:
+            self.assignment_mode[assignment] = "none"
+        else:
+            i = 1
+            while i < 100:
+                numberList = [x for x in c if c.get(x) > i]
+                if numberList == []:
+                    numberList = [x for x in c if c.get(x) > (i - 1)]
+                    self.assignment_mode[assignment] = numberList
+                    break
+                else:
+                    i += 1
 
     def see_class_detail(self):
         print("This class is " + self.class_name)
