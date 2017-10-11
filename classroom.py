@@ -16,6 +16,7 @@ class Classroom(object):
         print("you create the %s class" % self.class_name)
 
     def command(self):
+        """command interface"""
         print("The command list")
         print("as: add a student, rs: remove a student,")
         print("aa: add an assignment, ra: remove an assignment,")
@@ -46,6 +47,7 @@ class Classroom(object):
         self.command()
 
     def add_class_schedule(self):
+        """add class date and time"""
         day = input("When is the %s class: " % self.class_name)
         self.day_time[day] = input("What time does it start on %s: " % day)
         more_day = input("Do you add other days? (yes or no): ")
@@ -56,6 +58,7 @@ class Classroom(object):
             return
 
     def remove_class_schedule(self):
+        """remove class date"""
         day = input("What date do you want to remove? The class schedule is now %s: " % self.day_time)
         if day in self.day_time:
             self.day_time.pop(day)
@@ -65,6 +68,7 @@ class Classroom(object):
             return
 
     def calculate_average_grade(self):
+        """calculate grade average of each student"""
         for student in self.students:
             if self.students[student].assignment_grade == {}:
                 self.students_grades[student] = 0.0
@@ -78,6 +82,7 @@ class Classroom(object):
         print(self.students_grades)
 
     def add_student(self):
+        """add studnet with name and time"""
         name = input("Who will you add to the %s class: " % self.class_name)
         on_time = input("He/She join in the %s class on time or late?: " % self.class_name)
         self.students[name] = Student(name, on_time)
@@ -90,6 +95,7 @@ class Classroom(object):
         print("%s has %s" % (self.class_name, self.students_name))
 
     def remove_student(self):
+        """remove student"""
         name = input("Who will you remove from the %s class: " % self.class_name)
         if name in self.students_name:
             self.students.pop(name)
@@ -100,6 +106,7 @@ class Classroom(object):
             return
 
     def add_assignment(self):
+        """add assignment and grade for each student"""
         assignment = input("What is the assignment name: ")
         print("you give students %s for assignment" % assignment)
         for student in self.students:
@@ -116,6 +123,7 @@ class Classroom(object):
             self.assignments.append(assignment)
 
     def remove_assignment(self):
+        """remove assignment"""
         all_or_one = input("Do you want to remove an assignment from all students' lists or just one student's list? (type all or one): ")
         if all_or_one == "all":
             assignment = input("Which assignment do you remove? %s: " % (self.assignments))
@@ -147,6 +155,7 @@ class Classroom(object):
             return
 
     def each_assignment_average(self, assignment):
+        """calculate average for each assignment"""
         total = 0
         number_of_students = 0
         for student in self.students:
@@ -158,6 +167,7 @@ class Classroom(object):
         self.assignment_average[assignment] = round(average, 2)
 
     def each_assignment_median(self, assignment):
+        """calculate median for each assignment"""
         assignment_grade_roster = []
         number_of_students = 0
         for student in self.students:
@@ -174,6 +184,7 @@ class Classroom(object):
             self.assignment_median[assignment] = round(middle_number, 2)
 
     def each_assignment_mode(self, assignment):
+        """calculate mode for each assignment"""
         assignment_grade_roster = []
         for student in self.students:
             if assignment in self.students[student].assignment_grade:
@@ -195,6 +206,7 @@ class Classroom(object):
                     i += 1
 
     def average_median_mode(self):
+        """print average, median and mode"""
         assignment = input("Which assignment detail do you want to see? %s: " % self.assignments)
         self.each_assignment_average(assignment)
         self.each_assignment_median(assignment)
@@ -202,6 +214,7 @@ class Classroom(object):
         print("mean: %s, median: %s, mode: %s" % (self.assignment_average[assignment], self.assignment_median[assignment], self.assignment_mode[assignment]))
 
     def see_class_detail(self):
+        """print class detail"""
         print("This class is " + self.class_name)
         print(self.day_time)
         print(self.assignments)
