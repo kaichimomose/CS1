@@ -1,5 +1,7 @@
 from student import Student
 from collections import Counter
+import matplotlib.pyplot as plt
+
 
 
 class Classroom(object):
@@ -216,3 +218,36 @@ class Classroom(object):
         print(self.students_grades)
         for name in self.students_name:
             print("%s: %s" % (name, self.students[name].assignment_grade))
+
+    def show_assignment_average_graph(self):
+        plt.bar(self.assignment_average.keys(), self.assignment_average.values(), align='center', alpha=0.5)
+        plt.ylabel('average points')
+        plt.xlabel('assignments')
+        plt.title('Mean of each assignment', fontsize=20, color='black')
+        plt.show()
+
+    def show_assignment_median_graph(self):
+        plt.bar(self.assignment_median.keys(), self.assignment_median.values(), align='center', alpha=0.5)
+        plt.ylabel('median points')
+        plt.xlabel('assignments')
+        plt.title('Median of each assignment', fontsize=20, color='black')
+        plt.show()
+
+    def show_students_grades_graph(self):
+        plt.bar(self.students_grades.keys(), self.students_grades.values(), align='center', alpha=0.5)
+        plt.ylabel('average points')
+        plt.xlabel('students')
+        plt.title("Mean of each student's grade", fontsize=20, color='black')
+        plt.show()
+
+    def show_number_of_excused_absent_graph(self):
+        students_name = []
+        number_of_excused_absent = []
+        for student in self.students:
+            students_name.append(student)
+            number_of_excused_absent.append(self.students[student].excused_absent)
+        plt.bar(students_name, number_of_excused_absent, align='center', alpha=0.5)
+        plt.ylabel('number of excused absent')
+        plt.xlabel('students')
+        plt.title("Number of excused absent of each student", fontsize=20, color='black')
+        plt.show()

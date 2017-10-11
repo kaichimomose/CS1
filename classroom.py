@@ -1,5 +1,6 @@
 from student import Student
 from collections import Counter
+import matplotlib.pyplot as plt
 
 class Classroom(object):
     """docstring fo Classroom."""
@@ -21,8 +22,8 @@ class Classroom(object):
         print("as: add a student, rs: remove a student,")
         print("aa: add an assignment, ra: remove an assignment,")
         print("ac: add a day to the class schedule, rc: remove a day from the class schedule,")
-        print("c: calculate average of each student's grades,")
-        print("s: see class detail, e: exit the %s class: " % self.class_name)
+        print("c: calculate average of each student's grades, s: see class detail,")
+        print("g: see graphs, e: exit the %s class: " % self.class_name)
         command = input("Type a command: ")
         if command == "as":
             self.add_student()
@@ -40,6 +41,8 @@ class Classroom(object):
             self.calculate_average_grade()
         elif command == "s":
             self.see_class_detail()
+        elif command == "g":
+            self.graph()
         elif command == "e":
             return
         else:
@@ -48,7 +51,7 @@ class Classroom(object):
 
     def add_class_schedule(self):
         """add class date and time"""
-        day = input("When is the %s class: " % self.class_name)
+        day = input("What day is the %s class: " % self.class_name)
         self.day_time[day] = input("What time does it start on %s: " % day)
         more_day = input("Do you add other days? (yes or no): ")
         print(self.day_time)
@@ -226,3 +229,43 @@ class Classroom(object):
             self.each_assignment_median(assignment)
             self.each_assignment_mode(assignment)
             print("%s: mean: %s, median: %s, mode: %s" % (assignment, self.assignment_average[assignment], self.assignment_median[assignment], self.assignment_mode[assignment]))
+
+    def graph(self):
+        """see all graphs"""
+        self.show_assignment_average_graph()
+        self.show_assignment_median_graph()
+        self.show_students_grades_graph()
+        self.show_number_of_excused_absent_graph()
+
+    def show_assignment_average_graph(self):
+        plt.bar(self.assignment_average.keys(), self.assignment_average.values(), align='center', alpha=0.5)
+        plt.ylabel('average points')
+        plt.xlabel('assignments')
+        plt.title('Mean of each assignment', fontsize=20, color='black')
+        plt.show()
+
+    def show_assignment_median_graph(self):
+        plt.bar(self.assignment_median.keys(), self.assignment_median.values(), align='center', alpha=0.5)
+        plt.ylabel('median points')
+        plt.xlabel('assignments')
+        plt.title('Median of each assignment', fontsize=20, color='black')
+        plt.show()
+
+    def show_students_grades_graph(self):
+        plt.bar(self.students_grades.keys(), self.students_grades.values(), align='center', alpha=0.5)
+        plt.ylabel('average points')
+        plt.xlabel('students')
+        plt.title("Mean of each student's grade", fontsize=20, color='black')
+        plt.show()
+
+    def show_number_of_excused_absent_graph(self):
+        students_name = []
+        number_of_excused_absent = []
+        for student in self.students:
+            students_name.append(student)
+            number_of_excused_absent.append(self.students[student].excused_absent)
+        plt.bar(students_name, number_of_excused_absent, align='center', alpha=0.5)
+        plt.ylabel('number of excused absent')
+        plt.xlabel('students')
+        plt.title("Number of excused absent of each student", fontsize=20, color='black')
+        plt.show()

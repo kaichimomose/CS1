@@ -157,3 +157,8 @@ def test_assignment_average_median_mode():
     assert classroom.assignment_average["Gradebook"] == 29.00
     classroom.each_assignment_median("Gradebook")
     assert classroom.assignment_median["Gradebook"] == 20.00
+    classroom.calculate_average_grade()
+    classroom.show_assignment_average_graph()
+    classroom.show_assignment_median_graph()
+    classroom.show_students_grades_graph()
+    classroom.show_number_of_excused_absent_graph()
