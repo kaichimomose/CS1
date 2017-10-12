@@ -85,7 +85,7 @@ class Classroom(object):
         print(self.students_grades)
 
     def add_student(self):
-        """add studnet with name and time"""
+        """add student with name and time"""
         name = input("Who will you add to the %s class: " % self.class_name)
         on_time = input("He/She join in the %s class on time or late?: " % self.class_name)
         self.students[name] = Student(name, on_time)

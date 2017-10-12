@@ -10,7 +10,7 @@ number_words = ""
 # pick a word up
 def loadWord():
     f = open('hangman_words.txt', 'r')
-    wordsList = f.readlines()
+    wordsList = f.read()
     f.close()
 
     wordsList = wordsList[0].split(' ')
