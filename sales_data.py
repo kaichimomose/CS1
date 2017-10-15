@@ -27,6 +27,16 @@ def loadWord():
 
     # print(total)
 
+    def clean_up(raw_data):
+        sales_roster = []
+        for i in raw_data:
+            clean_up_line = i.replace('\n', '')
+            clean_up_line = clean_up_line.replace('$', '')
+            clean_up_line = clean_up_line.split('\t')
+            clean_up_line[3] = float(clean_up_line[3])
+            sales_roster.append(clean_up_line)
+        return sales_roster
+
     def filter_key(keyword, salesLists):
         sales_roster = []
         for salesList in salesLists:
@@ -58,12 +68,15 @@ def loadWord():
                 total_amount += float(money)
 
     # print(salesLists_each_city)
+    # print(total_amount)
+
+    cleaned_data = clean_up(salesLists)
+    total_amount = sum([i[3] for i in cleaned_data])
     print(total_amount)
 
     """Which city had the highest sales in February?"""
 
     city_roster = []
-    feb_sales = []
     total_amount_each_city = {}
 
     for salesList in salesLists_each_city:
@@ -71,15 +84,9 @@ def loadWord():
         if city_name not in city_roster:
             city_roster.append(city_name)
 
-    for salesList in salesLists_each_city:
-        for item in salesList:
-            if "2/" in item:
-                if "12/" not in item:
-                    feb_sales.append(salesList)
-
     for city in city_roster:
         total_amount_each_city[city] = 0
-        for feb_sale in feb_sales:
+        for feb_sale in filter_key("2/", salesLists_each_city):
             if city in feb_sale:
                 for item in feb_sale:
                     if "$" in item:
@@ -115,19 +122,9 @@ def loadWord():
             payment_way_roster.append(payment_way)
     # print(payment_way_roster)
 
-    cash_roster = []
-    credit_roster = []
-
-    for salesList in salesLists_each_city:
-        for item in salesList:
-            if "Cash" in item:
-                cash_roster.append(salesList)
-            else:
-                credit_roster.append(salesList)
-
     total_amount_with_cash = 0
 
-    for cash in cash_roster:
+    for cash in filter_key("Cash", salesLists_each_city):
         for item in cash:
             if "$" in item:
                 money = item.replace("$", '')
