@@ -1,7 +1,7 @@
 from Person import Person
 from Virus import Virus
 import random
-random.seed()
+random.seed(1)
 
 class Simulater(object):
     def __init__(self, population, virus_name):
@@ -48,6 +48,7 @@ class Simulater(object):
     def people_die_or_infect(self):
         self.people_get_infectd_or_vaccinated()
         virus = Virus(self.virus_name)
+        virus.set_detail()
         for person in self.people:
             if self.people[person].sick is True:
                 number = random.randint(1, 100)
@@ -71,5 +72,5 @@ class Simulater(object):
         print("%s %s %s %s" % (len(self.infected_people), len(self.vaccinated_people), self.dead, len(self.rest_people)))
 
 
-simu = Simulater(50000, "a")
+simu = Simulater(10, "Melaria")
 simu.people_die_or_infect()
