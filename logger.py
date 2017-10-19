@@ -33,4 +33,4 @@ class Logger(object):
         # people infected, the number of people dead, etc.  You may want to create a helper class
         # to compute these statistics for you, as a Logger's job is just to write logs!
         with open('%s.txt' % self.file_name, 'a') as f:
-            f.write("%s\n" % time_step_number)
+            f.write("step %s is done\n" % time_step_number)
