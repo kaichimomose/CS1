@@ -166,8 +166,11 @@ class Classroom(object):
                 if self.students[student].assignment_grade[assignment] != "absent":
                     total += self.students[student].assignment_grade[assignment]
                     number_of_students += 1
-        average = total/number_of_students
-        self.assignment_average[assignment] = round(average, 2)
+        if number_of_students > 0:
+            average = total/number_of_students
+            self.assignment_average[assignment] = round(average, 2)
+        # else:
+        #     average = float('NaN')
 
     def each_assignment_median(self, assignment):
         """calculate median for each assignment"""
