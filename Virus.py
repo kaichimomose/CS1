@@ -11,8 +11,8 @@ class Virus(object):
 
         elif self.name == "Ebola":
             self.deadliness = 0.7
-            self.contagiousness = 2
+            self.contagiousness = 2.3
 
-        elif self.name == "Melaria":
+        elif self.name == "Malaria":
             self.deadliness = 0.3
             self.contagiousness = 15

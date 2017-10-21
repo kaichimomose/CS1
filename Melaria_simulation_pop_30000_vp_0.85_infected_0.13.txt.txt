@@ -1,1 +1,0 @@
-30000 population 0.85 people got vaccinated. Melaria's mortality rate and basic reproduction number are 0.3 and 15
