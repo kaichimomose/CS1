@@ -15,7 +15,7 @@ class Simulater(object):
         self.first_infected = first_infected
         self.vaccination_rate = vaccination_rate
         self.dead = 0
-        self.file_name = "{}_simulation_pop_{}_vp_{}_infected_{}.txt".format(
+        self.file_name = "{}_simulation_pop_{}_vp_{}_infected_{}".format(
             virus_name, population, self.vaccination_rate, self.first_infected)
         self.logger = Logger(self.file_name)
 
