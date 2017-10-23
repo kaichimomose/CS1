@@ -2,10 +2,11 @@ from Person import Person
 from Virus import Virus
 from logger import Logger
 import random, sys
-random.seed(1)
+random.seed(42)
 
 class Simulater(object):
     def __init__(self, population, vaccination_rate, virus_name, first_infected):
+        # minimum population number is 1000
         if population < 1000:
             self.population = 1000
         else:
@@ -22,23 +23,25 @@ class Simulater(object):
             virus_name, population, self.vaccination_rate, self.first_infected)
         self.logger = Logger(self.file_name)
 
+    """"to create people dictionary {number: Person object}"""
     def create_people(self):
         i = 0
         while i < self.population:
             self.people[i] = Person()
             i += 1
 
+    """to decide which person get infected or vaccinated initially"""
     def people_get_infectd_or_vaccinated(self):
-        self.virus.set_detail()
+        self.virus.set_detail()  # to set virus modetaly rate and basic reproduction rate
         self.create_people()
-        number_of_infected_people = self.first_infected
         i = 0
+        # number of vaccinated people is vaccination_rate times number of population desides initail infected people
         number_of_vaccinated_people = (self.population - self.first_infected) * self.vaccination_rate
         while i < int(number_of_vaccinated_people):
             self.people[i].vaccinated = True
             self.vaccinated_people += 1
             i += 1
-        while i < int(number_of_infected_people) + int(number_of_vaccinated_people):
+        while i < self.first_infected + int(number_of_vaccinated_people):
             self.people[i].sick = True
             self.infected_people += 1
             i += 1
@@ -46,7 +49,7 @@ class Simulater(object):
             self.regular_people += 1
             i += 1
         print("number_of_infected_people, number_of_vaccinated_people, dead, regular_people")
-        print("%s %s %s %s" % (int(number_of_infected_people), int(number_of_vaccinated_people), self.dead, self.regular_people))
+        print("%s %s %s %s" % (self.first_infected, int(number_of_vaccinated_people), self.dead, self.regular_people))
         self.logger.write_metadata(self.population, self.first_infected, self.vaccination_rate, self.virus.name, self.virus.deadliness, self.virus.contagiousness)
 
 # number_of_infected_people = self.population * self.first_infected
@@ -64,10 +67,12 @@ class Simulater(object):
 #     self.regular_people[i] = self.people[i]
 #     i += 1
 
+    """to interact 100 people, infect people based on basic reproduction rate and decide die or go through"""
     def people_die_or_overcome(self):
-        infected_people_list = []
+        infected_people_list = []  # a person who get infected in this step cannot infect somebady and die or get better in the same step.
         for person in self.people:
             if self.people[person].death is False and self.people[person].sick is True and person not in infected_people_list:
+                # to decide a integer of basic reproduction rate
                 number = random.random()
                 percentage = self.virus.contagiousness - int(self.virus.contagiousness)
                 if number <= percentage:
@@ -77,8 +82,9 @@ class Simulater(object):
                 i = 0
                 j = 0
                 hundred_people_list = []
+                # to stop iteration if a infected person infect people or interact with 100 people
                 while i < contagiousness and j < 100:
-                    pick_person = random.randint(0, (self.population - 1))
+                    pick_person = random.randint(0, (self.population - 1))  # to pick a person from people dictionary randomly
                     if pick_person != person and pick_person not in hundred_people_list and self.people[pick_person].death is False:
                         hundred_people_list.append(pick_person)
                         j += 1
@@ -95,6 +101,7 @@ class Simulater(object):
                         self.logger.log_interaction(person, pick_person, did_infect, self.people[pick_person].vaccinated, self.people[pick_person].sick)
                     else:
                         pass
+                # to decide a infected peron to die or get better based on modetaly rate
                 number = random.randint(1, 100)
                 if number <= self.virus.deadliness * 100:
                     self.people[person].death = True
@@ -131,9 +138,10 @@ class Simulater(object):
     #         self.logger.log_interaction(person, pick_number, did_infect, self.people[pick_number].vaccinated, self.people[pick_number].sick)
     #         i += 1
 
+    """to stop simulation if number of infected people is 0"""
     def iterate_simu(self):
         self.people_get_infectd_or_vaccinated()
-        i = 1
+        i = 1  # to count time step
         while self.infected_people > 0:
             self.people_die_or_overcome()
             self.logger.log_time_step(i, self.infected_people, self.vaccinated_people, self.dead, self.regular_people)
