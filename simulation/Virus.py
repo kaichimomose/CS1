@@ -16,3 +16,6 @@ class Virus(object):
         elif self.name == "Malaria":
             self.deadliness = 0.3
             self.contagiousness = 15
+
+        else:
+            print("This virus name is unvalidated")

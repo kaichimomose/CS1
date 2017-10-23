@@ -6,7 +6,10 @@ random.seed(1)
 
 class Simulater(object):
     def __init__(self, population, vaccination_rate, virus_name, first_infected):
-        self.population = population
+        if population < 1000:
+            self.population = 1000
+        else:
+            self.population = population
         self.virus = Virus(virus_name)
         self.people = {}
         self.infected_people = 0
